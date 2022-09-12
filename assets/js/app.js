@@ -52,6 +52,10 @@ const pageClasses = {
     wishlists: () => import('./theme/wishlist'),
 };
 
+const addonClasses = {
+    product: () => import('./hello-world/hello-world')
+}
+
 const customClasses = {};
 
 /**
@@ -78,6 +82,12 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
                 const pageClassImporter = pageClasses[pageType];
                 if (typeof pageClassImporter === 'function') {
                     importPromises.push(pageClassImporter());
+                }
+
+                // Find the appropriate page loader based on pageType
+                const addonClassImporter = addonClasses[pageType];
+                if (typeof addonClassImporter === 'function') {
+                    importPromises.push(addonClassImporter());
                 }
 
                 // See if there is a page class default for a custom template

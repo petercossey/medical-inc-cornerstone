@@ -13,6 +13,11 @@ import { isBrowserIE, convertIntoArray } from './utils/ie-helpers';
 import bannerUtils from './utils/banner-utils';
 import currencySelector from '../global/currency-selector';
 
+// Add our custom component which we'll render once the modal content update is complete
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import DonationUpsell from '../../components/DonationUpsell';
+
 export default class ProductDetails extends ProductDetailsBase {
     constructor($scope, context, productAttributesData = {}) {
         super($scope, context);
@@ -434,7 +439,18 @@ export default class ProductDetails extends ProductDetailsBase {
                     this.previewModal.$preModalFocusedEl = $addToCartBtn;
                 }
 
-                this.updateCartContent(this.previewModal, response.data.cart_item.id);
+                this.updateCartContent(this.previewModal, response.data.cart_item.id, () => {
+                    // This is the body of the callback function when updateCartContent() is completed
+                    // This is where we can instantiate our React component
+                    // this.context.donationProducts has been injected into our JS context from the product.html template
+                    const getDonations = {
+                        foo: "bar",
+                        products: this.context.donationProducts
+                    }
+                    const donationRoot = ReactDOM.createRoot(document.getElementById("donation-root"));
+                    donationRoot.render(<DonationUpsell donations={getDonations}/>);
+                });
+                
             } else {
                 this.$overlay.show();
                 // if no modal, redirect to the cart page
