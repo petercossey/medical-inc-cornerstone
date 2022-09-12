@@ -1,6 +1,6 @@
 {
-  "name": "Cornerstone",
-  "version": "6.6.0-rc.1",
+  "name": "Medical Inc Cornerstone",
+  "version": "0.0.1",
   "template_engine": "handlebars_v4",
   "meta": {
     "price": 0,
@@ -342,7 +342,7 @@
     "paymentbuttons-container": "medium",
     "supported_card_type_icons": [
       "american_express",
-      "diners_club",
+      "diners",
       "discover",
       "mastercard",
       "visa"
