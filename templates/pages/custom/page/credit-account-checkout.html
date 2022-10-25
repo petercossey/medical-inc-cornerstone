@@ -1,0 +1,80 @@
+{{#partial "page"}} {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+<section class="page">
+  {{#unless theme_settings.hide_page_heading }}
+  <h1 class="page-heading">{{ page.title }}</h1>
+  {{/unless}} {{#if page.sub_pages}}
+  <nav class="navBar navBar--sub">
+    <ul class="navBar-section account-navigation">
+      {{#each page.sub_pages}}
+      <li class="navBar-item">
+        <a class="navBar-action" href="{{url}}">{{title}}</a>
+      </li>
+      {{/each}}
+    </ul>
+  </nav>
+  {{/if}}
+  
+  {{{region name="page_builder_content"}}}
+
+  <div class="page-content page-content--centered">
+    {{#replace '%%Syndicate%%' page.content}} {{> components/page/rss_feed}}
+    {{else}}
+    <p>{{{page.content}}}</p>
+    {{/replace}}
+  </div>
+
+</section>
+
+{{#if gql.data.customer.attributes.attribute.value}}
+<section>
+  <div class="page-content page-content--centered">
+    <section>
+      <div class="layout optimizedCheckout-contentPrimary">
+        {{#if gql.data.customer.attributes.attribute.value '===' '1'}}
+            <div
+            style="
+                margin-top: 2rem;
+                padding: 1rem;
+                border: 1px solid grey;
+                background-color: rgb(240, 255, 247);
+            "
+            >
+            <h3 style="margin: 1rem">Checkout with Credit</h3>
+            <p>Place your order using your credit account</p>
+            <button
+                style="background-color: darkslategrey"
+                class="button button--primary optimizedCheckout-buttonPrimary"
+                >
+                Place order
+                </button>
+            </div>
+        {{else if gql.data.customer.attributes.attribute.value '===' '2'}}
+            <div
+            style="
+                margin-top: 2rem;
+                padding: 1rem;
+                border: 1px solid grey;
+                background-color: rgb(255, 240, 240);
+            "
+            >
+            <h3 style="margin: 1rem">Credit Account in Arrears</h3>
+            <p>Contact customer support to update the credit account.</p>
+            </div>
+        {{/if}}
+      </div>
+    </section>
+  </div>
+</section>
+{{else}}
+<section>
+  <div class="page-content page-content--centered">
+    <div style="font-size:150%;font-weight:bold;">
+        <p>Customer doesn't have a credit account and cannot place order. Contact customer support...</p>
+        <p>It may also make sense to redirect to a dedicated customer support page.</p>
+    </div>
+  </div>
+</section>
+{{/if}}
+
+{{/partial}} {{> layout/customer-base}}

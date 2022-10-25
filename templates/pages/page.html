@@ -1,3 +1,17 @@
+---
+gql: "query {
+    customer {
+        email
+        firstName
+        lastName
+        attributes {
+            attribute(entityId: 1) {
+                value
+            }
+        }
+    }
+}"
+---
 {{#partial "page"}}
 
 {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}

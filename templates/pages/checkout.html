@@ -1,3 +1,17 @@
+---
+gql: "query {
+    customer {
+        email
+        firstName
+        lastName
+        attributes {
+            attribute(entityId: 1) {
+                value
+            }
+        }
+    }
+}"
+---
 {{#partial "head"}}
 
 {{{ checkout.checkout_head }}}
@@ -13,6 +27,7 @@
 {{/partial}}
 
 {{#partial "page"}}
+
 <header class="checkoutHeader optimizedCheckout-header">
     <div class="checkoutHeader-content">
         <h1 class="is-srOnly">{{lang 'checkout.title'}}</h1>
@@ -27,6 +42,18 @@
         </h2>
     </div>
 </header>
+
+{{#if gql.data.customer.attributes.attribute.value}}
+<section>
+    <div class="layout optimizedCheckout-contentPrimary">
+        <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(240, 255, 247)">
+            <h3 style="margin-bottom: 1rem;">Credit Account Options</h3>
+            <p>Place your order using your credit account</p>
+            <a href="/credit-account-checkout/"><button style="background-color:darkslategrey" class="button button--primary optimizedCheckout-buttonPrimary">Credit account checkout</button></a>
+        </div>
+    </div>
+</section>
+{{/if}}
 
 {{{ checkout.checkout_content }}}
 
