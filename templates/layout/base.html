@@ -51,6 +51,9 @@
 
         {{!-- Get this loading ASAP --}}
         <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.main.js'}}" as="script">
+
+        {{!-- Loading Checkout JS SDK via CDN  --}}
+        <script type="text/javascript" src="https://checkout-sdk.bigcommerce.com/v1/loader.js" defer></script>
     </head>
     <body>
         <svg data-src="{{cdn 'img/icon-sprite.svg'}}" class="icons-svg-sprite"></svg>

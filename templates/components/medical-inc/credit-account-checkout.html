@@ -1,0 +1,15 @@
+{{!--
+  This partial template relies on frontmatter variables from the checkout.html page.
+  If you use this template on any other page in the theme, make sure the same variables are available.
+--}}
+{{#if gql.data.customer.attributes.creditAccount.value}}
+<section>
+    <div class="layout optimizedCheckout-contentPrimary">
+        <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(240, 255, 247)">
+            <h3 style="margin-bottom: 1rem;">Credit Account Options</h3>
+            <p>Place your order using your credit account</p>
+            <a href="https://credit-account-checkout.azurewebsites.net/api/CreateOrder?checkout={{cart_id}}"><button style="background-color:darkslategrey" class="button button--primary optimizedCheckout-buttonPrimary">Credit account checkout</button></a>
+        </div>
+    </div>
+</section>
+{{/if}}

@@ -1,17 +1,36 @@
 ---
+cart: true
 gql: "query {
     customer {
         email
         firstName
         lastName
         attributes {
-            attribute(entityId: 1) {
+            creditAccount: attribute(entityId: 1) {
+                value
+            }
+            purchaseOrderRequired: attribute(entityId: 6) {
+                value
+            }
+            purchaseOrderThreshold: attribute(entityId: 7) {
                 value
             }
         }
     }
 }"
 ---
+{{!-- Inject frontmatter values into jsContext for custom widgets --}}
+{{!-- https://developer.bigcommerce.com/stencil-docs/ZG9jOjIyMDcxOA-handlebars-helpers-reference#inject --}}
+{{inject "creditAccount" gql.data.customer.attributes.creditAccount.value}}
+{{inject "purchaseOrderRequired" gql.data.customer.attributes.purchaseOrderRequired.value}}
+{{inject "purchaseOrderThreshold" gql.data.customer.attributes.purchaseOrderThreshold.value}}
+{{inject "cartId" cart_id}}
+{{inject "cartSubtotal" cart.sub_total.value}}
+
+<script>
+const jsContext = JSON.parse({{jsContext}});
+</script>
+
 {{#partial "head"}}
 
 {{{ checkout.checkout_head }}}
@@ -43,17 +62,8 @@ gql: "query {
     </div>
 </header>
 
-{{#if gql.data.customer.attributes.attribute.value}}
-<section>
-    <div class="layout optimizedCheckout-contentPrimary">
-        <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(240, 255, 247)">
-            <h3 style="margin-bottom: 1rem;">Credit Account Options</h3>
-            <p>Place your order using your credit account</p>
-            <a href="https://credit-account-checkout.azurewebsites.net/api/CreateOrder?checkout={{cart_id}}"><button style="background-color:darkslategrey" class="button button--primary optimizedCheckout-buttonPrimary">Credit account checkout</button></a>
-        </div>
-    </div>
-</section>
-{{/if}}
+{{> components/medical-inc/purchase-order }}
+{{> components/medical-inc/credit-account-checkout }}
 
 {{{ checkout.checkout_content }}}
 

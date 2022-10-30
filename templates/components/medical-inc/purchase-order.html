@@ -1,0 +1,68 @@
+{{!--
+  This partial template relies on frontmatter variables and jsContext injections
+  from the checkout.html page. If you use this template on any other page in the theme,
+  make sure the same variables and jsContext values are available.
+--}}
+{{!-- Check if purchase order is required --}}
+{{#if gql.data.customer.attributes.purchaseOrderRequired.value}}
+
+    {{!-- Check if purchase order threshold exists --}}
+    {{#if gql.data.customer.attributes.purchaseOrderThreshold.value}}
+
+        {{#if cart.sub_total.value '>=' gql.data.customer.attributes.purchaseOrderThreshold.value}}
+
+            <section id="purchase-order-required">
+                <div class="layout optimizedCheckout-contentPrimary">
+                    <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(255, 240, 248)">
+                        <h3 style="margin-bottom: 1rem;">Purchase Order Required</h3>
+                        <p>Your cart sub total ({{cart.sub_total.value}}) is above your purchase order threshold of ${{gql.data.customer.attributes.purchaseOrderThreshold.value}}.</p>
+
+                        {{> components/medical-inc/purchase-order-form }}
+
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+
+    {{else}}
+        {{!-- Purchase order is required and no threshold exists --}}
+        <section id="purchase-order-required">
+                <div class="layout optimizedCheckout-contentPrimary">
+                    <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(255, 240, 248)">
+                        <h3 style="margin-bottom: 1rem;">Purchase Order Required</h3>
+                        <p>Your customer account requires a purchas order no. for all purchases.</p>
+
+                        {{> components/medical-inc/purchase-order-form }}
+
+                    </div>
+                </div>
+            </section>
+    {{/if}}
+
+    {{!-- Loading Checkout JS SDK via CDN  --}}
+    <script type="text/javascript" src="https://checkout-sdk.bigcommerce.com/v1/loader.js"></script>
+
+    {{!-- 
+        We're not utilising the typical Stencil JS module/initialisation pattern here as a means
+        to avoid loading unneccesary theme bundle JS. To explore alternative methods for adding JS
+        to Stencil pages see: https://developer.bigcommerce.com/stencil-docs/ZG9jOjEyNDYyOTg-adding-javascript
+
+        The only  JS dependencies & DOM we're relying on are loaded above or via the jsContext in checkout.html
+    --}}
+    <script>
+        (async(jsContext) => {
+            // Wrapping the contents in an async IIFE so we can use the await syntax for our checkout-sdk calls
+            const purchaseOrderCheckout = await checkoutKitLoader.load('checkout-sdk');
+            const purchaseOrderService = await purchaseOrderCheckout.createCheckoutService();
+            let purchaseOrderState = await purchaseOrderService.loadCheckout(jsContext.cartId);
+
+            //TODO: form#purchase-order-no handling code
+
+            // We can manipulate the customerMessage for this checkout/order by using the purchaseOrderService.updateCheckout() method
+            purchaseOrderState = await purchaseOrderService.updateCheckout({
+                customerMessage: "TBD"
+            });
+            console.log(purchaseOrderState);
+        })(jsContext);        
+    </script>
+{{/if}}
