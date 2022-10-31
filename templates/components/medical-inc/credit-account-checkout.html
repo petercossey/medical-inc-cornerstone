@@ -1,5 +1,6 @@
+{{!-- Hide offline payment method by default; Offline payment orders will be validated in the ERP/CRM system after orders are placed --}}
 <style>
-.checkout-step--payment form.checkout-form ul.form-checklist > li:nth-child(2) {
+.checkout-step--payment form.checkout-form ul.form-checklist > li:last-child {
     display: none;
 }
 </style>
@@ -11,16 +12,24 @@
 {{#if gql.data.customer.attributes.creditAccount.value}}
 <section>
     <div class="layout optimizedCheckout-contentPrimary">
-        <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(240, 255, 247)">
-            <h3 style="margin-bottom: 1rem;">Credit Account Options</h3>
-            <p>Place your order using your credit account</p>
-            <a href="https://credit-account-checkout.azurewebsites.net/api/CreateOrder?checkout={{cart_id}}"><button style="background-color:darkslategrey" class="button button--primary optimizedCheckout-buttonPrimary">Credit account checkout</button></a>
-        </div>
+        {{#if gql.data.customer.attributes.creditAccount.value '===' '1'}}
+            <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(240, 255, 247)">
+                <h3 style="margin-bottom: 1rem;">Credit Account Options</h3>
+                <p>Place your order using your credit account</p>
+                <p>Select the <strong>Credit Account</strong> payment option in the checkout to purchase using your account.</p>
+                {{!-- <a href="https://credit-account-checkout.azurewebsites.net/api/CreateOrder?checkout={{cart_id}}"><button style="background-color:darkslategrey" class="button button--primary optimizedCheckout-buttonPrimary">Credit account checkout</button></a> --}}
+            </div>
+            <style>
+            .checkout-step--payment form.checkout-form ul.form-checklist > li:last-child {
+                display: list-item;
+            }
+            </style>
+         {{else if gql.data.customer.attributes.creditAccount.value '===' '2'}}
+            <div style="margin-top: 2rem; padding:1rem; border:1px solid grey; background-color:rgb(255, 240, 240)">
+                <h3 style="margin-bottom: 1rem;">Credit Account in Arrears</h3>
+                <p>Contact customer support to update the credit account.</p>
+            </div>
+        {{/if}}
     </div>
 </section>
-<style>
-.checkout-step--payment form.checkout-form ul.form-checklist > li:nth-child(2) {
-    display: list-item;
-}
-</style>
 {{/if}}
