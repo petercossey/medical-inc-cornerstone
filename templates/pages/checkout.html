@@ -33,7 +33,10 @@ const jsContext = JSON.parse({{jsContext}});
 
 {{#partial "head"}}
 
+{{!-- Only add checkout JS if customer is logged-in --}}
+{{#if customer}}
 {{{ checkout.checkout_head }}}
+{{/if}}
 {{{ stylesheet '/assets/css/optimized-checkout.css' }}}
 {{ getFontsCollection }}
 
@@ -62,11 +65,14 @@ const jsContext = JSON.parse({{jsContext}});
     </div>
 </header>
 
-{{> components/medical-inc/sign-in-prompt }}
-{{> components/medical-inc/purchase-order }}
-{{> components/medical-inc/credit-account-checkout }}
+{{#if NOT customer}}
+    {{> components/medical-inc/sign-in-prompt }}
+{{else}}
+    {{> components/medical-inc/purchase-order }}
+    {{> components/medical-inc/credit-account-checkout }}
 
-{{{ checkout.checkout_content }}}
+    {{{ checkout.checkout_content }}}
+{{/if}}
 
 {{{ footer.scripts }}}
 
