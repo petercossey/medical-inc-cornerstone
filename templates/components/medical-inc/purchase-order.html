@@ -38,31 +38,4 @@
                 </div>
             </section>
     {{/if}}
-
-    {{!-- Loading Checkout JS SDK via CDN  --}}
-    <script type="text/javascript" src="https://checkout-sdk.bigcommerce.com/v1/loader.js"></script>
-
-    {{!-- 
-        We're not utilising the typical Stencil JS module/initialisation pattern here as a means
-        to avoid loading unneccesary theme bundle JS. To explore alternative methods for adding JS
-        to Stencil pages see: https://developer.bigcommerce.com/stencil-docs/ZG9jOjEyNDYyOTg-adding-javascript
-
-        The only  JS dependencies & DOM we're relying on are loaded above or via the jsContext in checkout.html
-    --}}
-    <script>
-        (async(jsContext) => {
-            // Wrapping the contents in an async IIFE so we can use the await syntax for our checkout-sdk calls
-            const purchaseOrderCheckout = await checkoutKitLoader.load('checkout-sdk');
-            const purchaseOrderService = await purchaseOrderCheckout.createCheckoutService();
-            let purchaseOrderState = await purchaseOrderService.loadCheckout(jsContext.cartId);
-
-            //TODO: form#purchase-order-no handling code
-
-            // We can manipulate the customerMessage for this checkout/order by using the purchaseOrderService.updateCheckout() method
-            purchaseOrderState = await purchaseOrderService.updateCheckout({
-                customerMessage: "TBD"
-            });
-            console.log(purchaseOrderState);
-        })(jsContext);
-    </script>
 {{/if}}
